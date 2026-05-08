@@ -18,6 +18,20 @@
   --font-display: "Iropke Batang", "MaruBuri", "Nanum Myeongjo", serif;
 }
 
+.theme-blue {
+  --bg: #e8f0f4;
+  --paper: #f8fbff;
+  --paper-strong: #eff6ff;
+  --ink: #1d242f;
+  --muted: #636e7e;
+  --line: #b8cadb;
+  --accent: #354b6f;
+  --accent-2: #708eb9;
+  --accent-soft: #caeadb;
+  --mint: #e8dfe8;
+  --shadow: 0 24px 80px rgba(26, 44, 70, 0.12);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -33,9 +47,14 @@ body {
   font-family: var(--font-ui);
 }
 
+body.theme-blue {
+  background:
+    radial-gradient(circle at top left, rgba(112, 142, 185, 0.2), transparent 28%),
+    linear-gradient(160deg, #e9f1f6 0%, #dae5ed 44%, #eff4f8 100%);
+}
+
 button,
-input,
-select {
+input, select {
   font: inherit;
 }
 
@@ -46,9 +65,14 @@ select {
   padding: 24px;
 }
 
-.control-panel,
-.quote-paper {
+.control-panel {
   background: rgba(255, 253, 248, 0.92);
+  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow);
+}
+
+.quote-paper {
+  background: var(--paper);
   backdrop-filter: blur(16px);
   box-shadow: var(--shadow);
 }
@@ -62,6 +86,10 @@ select {
   border: 1px solid rgba(111, 75, 53, 0.08);
   border-radius: var(--radius-lg);
   padding: 28px;
+}
+
+.theme-blue .control-panel {
+  border: 1px solid rgba(53, 75, 111, 0.08);
 }
 
 .eyebrow {
@@ -284,7 +312,7 @@ select {
   min-width: 220px;
   padding: 18px;
   border-radius: 24px;
-  background: linear-gradient(135deg, rgba(111, 75, 53, 0.96), rgba(185, 142, 112, 0.84));
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
   color: #fff8f0;
 }
 
@@ -349,14 +377,15 @@ select {
 .meta-table th,
 .pricing-table th {
   width: 128px;
-  background: rgba(234, 219, 202, 0.42);
+  background: var(--accent-soft);
+  opacity: 0.8;
   font-size: 13px;
 }
 
 .meta-card {
   flex: 0.9;
   padding: 18px;
-  background: linear-gradient(180deg, rgba(223, 232, 223, 0.8), rgba(255, 253, 248, 0.8));
+  background: linear-gradient(180deg, var(--mint), var(--paper));
 }
 
 .meta-card h3,
@@ -371,7 +400,7 @@ select {
   margin: 22px 0 14px;
   padding: 16px 18px;
   border-radius: 20px;
-  background: linear-gradient(135deg, rgba(111, 75, 53, 0.92), rgba(145, 111, 87, 0.84));
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
   color: #fff9f2;
 }
 

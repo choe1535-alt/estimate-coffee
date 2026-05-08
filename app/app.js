@@ -87,6 +87,7 @@
   }
 
   function getFormState() {
+    const theme = form.elements.theme.value;
     const quoteDate = new Date(`${quoteDateInput.value}T00:00:00`);
     const machineName = form.elements.machineName.value;
     const machine = machineMap.get(machineName);
@@ -102,6 +103,7 @@
     const salesRep = repMap.get(form.elements.salesRep.value);
 
     return {
+      theme,
       companyName: form.elements.companyName.value.trim(),
       contactName: form.elements.contactName.value.trim(),
       contactPhone: form.elements.contactPhone.value.trim(),
@@ -347,7 +349,11 @@
   }
 
   function render() {
-    const quote = computeQuote(getFormState());
+    const state = getFormState();
+    const quote = computeQuote(state);
+
+    document.body.className = state.theme === "blue" ? "theme-blue" : "";
+
     const notes = [
       `${data.constants.ownershipTransferMonths}개월 이상 이용 시 커피머신 소유권이 이전됩니다.`,
       "1년 무상 A/S 가능합니다. 단, 소비자 과실은 유상 청구될 수 있습니다.",
