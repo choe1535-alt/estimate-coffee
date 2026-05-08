@@ -2,6 +2,12 @@
 
 정리본 `커피24 견적서 AX TF.xlsx`의 데이터 구조를 바탕으로, 원본 `★26년 커피24_견적서_VAT별도.xlsx` 레이아웃을 웹용으로 재구성한 정적 견적서 생성기입니다.
 
+## 배포
+
+GitHub Pages를 통해 자동으로 배포됩니다:
+- **URL**: [https://choe1535-alt.github.io/estimate-coffee/](https://choe1535-alt.github.io/estimate-coffee/)
+- **자동 배포**: `main` 브랜치에 `push`하면 GitHub Actions가 자동으로 사이트를 업데이트합니다.
+
 ## 파일
 
 - `index.html`: 메인 화면
