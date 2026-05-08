@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>커피24 견적서 생성기</title>
+    <link rel="stylesheet" href="./app/styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="control-panel">
+        <div class="panel-header">
+          <p class="eyebrow">Coffee24 Quote Builder</p>
+          <h1>커피24 견적서 생성기</h1>
+          <p class="panel-copy">
+            `변수 정보` 시트처럼 옵션을 고르면 원본 견적서 구조에 맞춘 인쇄용 견적서가 바로
+            생성됩니다.
+          </p>
+        </div>
+
+        <form id="quote-form" class="control-form">
+          <section class="form-section">
+            <div class="section-heading">
+              <h2>고객 정보</h2>
+              <span>기본 정보</span>
+            </div>
+            <div class="field-grid two-up">
+              <label class="field">
+                <span>고객사명</span>
+                <input name="companyName" type="text" value="(주)뉴빌리티" />
+              </label>
+              <label class="field">
+                <span>담당자 성함</span>
+                <input name="contactName" type="text" value="담당자님" />
+              </label>
+              <label class="field">
+                <span>담당자 연락처</span>
+                <input name="contactPhone" type="text" value="010-3211-6277" />
+              </label>
+              <label class="field">
+                <span>담당자 이메일</span>
+                <input name="contactEmail" type="email" value="hello@example.com" />
+              </label>
+              <label class="field">
+                <span>견적일</span>
+                <input name="quoteDate" type="date" />
+              </label>
+              <label class="field">
+                <span>영업담당자</span>
+                <select name="salesRep"></select>
+              </label>
+            </div>
+          </section>
+
+          <section class="form-section">
+            <div class="section-heading">
+              <h2>계약 옵션</h2>
+              <span>머신 / 약정 / 케어</span>
+            </div>
+            <div class="field-grid two-up">
+              <label class="field">
+                <span>머신 이름</span>
+                <select name="machineName"></select>
+              </label>
+              <label class="field">
+                <span>머신 수량</span>
+                <input name="machineQuantity" type="number" min="1" step="1" value="1" />
+              </label>
+              <label class="field">
+                <span>약정기간</span>
+                <select name="contractTerm">
+                  <option value="36">36개월</option>
+                  <option value="24">24개월</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>케어주기</span>
+                <select name="careCycle"></select>
+              </label>
+              <label class="field">
+                <span>머신 할인율</span>
+                <div class="input-suffix">
+                  <input name="machineDiscount" type="number" min="0" max="100" step="1" value="0" />
+                  <strong>%</strong>
+                </div>
+              </label>
+              <label class="field">
+                <span>구매 설치비 포함</span>
+                <select name="purchaseInstall">
+                  <option value="yes">포함</option>
+                  <option value="no">제외</option>
+                </select>
+              </label>
+            </div>
+          </section>
+
+          <section class="form-section">
+            <div class="section-heading">
+              <h2>원두 구성</h2>
+              <span>원두 포함 견적</span>
+            </div>
+            <div class="field-grid two-up">
+              <label class="field">
+                <span>원두 포함 여부</span>
+                <select name="beansEnabled">
+                  <option value="yes">포함</option>
+                  <option value="no">미포함</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>원두 할인율</span>
+                <div class="input-suffix">
+                  <input name="beanDiscount" type="number" min="0" max="100" step="1" value="0" />
+                  <strong>%</strong>
+                </div>
+              </label>
+              <label class="field">
+                <span>택배비</span>
+                <select name="shippingMode">
+                  <option value="auto">자동 계산</option>
+                  <option value="yes">항상 추가</option>
+                  <option value="no">항상 제외</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="bean-editor">
+              <div class="bean-editor-head">
+                <h3>원두 라인</h3>
+                <button id="add-bean-row" type="button" class="ghost-button">원두 추가</button>
+              </div>
+              <div id="bean-rows" class="bean-rows"></div>
+            </div>
+          </section>
+
+          <section class="form-actions">
+            <button type="button" id="print-button" class="primary-button">인쇄 / PDF 저장</button>
+            <button type="button" id="reset-button" class="ghost-button">기본값 복원</button>
+          </section>
+        </form>
+      </aside>
+
+      <main class="preview-wrap">
+        <div class="preview-toolbar">
+          <div>
+            <p class="eyebrow">Preview</p>
+            <h2>실시간 견적서</h2>
+          </div>
+          <div class="preview-badges">
+            <span>원본 양식 참고</span>
+            <span>정리본 데이터 사용</span>
+          </div>
+        </div>
+
+        <article id="quote-preview" class="quote-paper"></article>
+      </main>
+    </div>
+
+    <template id="bean-row-template">
+      <div class="bean-row">
+        <label class="field">
+          <span>원두</span>
+          <select data-bean-name></select>
+        </label>
+        <label class="field">
+          <span>수량(KG)</span>
+          <input data-bean-qty type="number" min="0" step="1" value="1" />
+        </label>
+        <button type="button" class="ghost-button bean-remove" data-bean-remove>삭제</button>
+      </div>
+    </template>
+
+    <script src="./app/data.js"></script>
+    <script src="./app/app.js"></script>
+  </body>
+</html>
