@@ -1,0 +1,441 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+ * THEME TOKENS — defined as HSL triplets for tailwind hsl(var())
+ * Each theme overrides editor chrome + paper variables.
+ *
+ *  --background / --foreground  : editor canvas + text
+ *  --paper / --paper-strong     : printed quote document
+ *  --ink                        : quote document text
+ *  --rule                       : hairline rules in the document
+ *  --brand / --brand-2          : section/strip accent colors
+ *  --font-sans / --font-display : page typography
+ * ============================================================ */
+
+:root,
+[data-theme="warm"] {
+  --background: 36 30% 96%;
+  --foreground: 24 25% 14%;
+  --card: 35 40% 99%;
+  --card-foreground: 24 25% 14%;
+  --popover: 35 40% 99%;
+  --popover-foreground: 24 25% 14%;
+  --primary: 24 35% 30%;
+  --primary-foreground: 36 60% 96%;
+  --secondary: 33 35% 90%;
+  --secondary-foreground: 24 25% 18%;
+  --muted: 33 25% 92%;
+  --muted-foreground: 24 12% 38%;
+  --accent: 26 35% 88%;
+  --accent-foreground: 24 25% 18%;
+  --destructive: 0 70% 45%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 30 22% 86%;
+  --input: 30 22% 86%;
+  --ring: 24 35% 30%;
+
+  --paper: 36 60% 99%;
+  --paper-strong: 36 50% 96%;
+  --ink: 24 30% 14%;
+  --rule: 30 22% 80%;
+  --brand: 24 35% 30%;
+  --brand-2: 22 40% 55%;
+  --paper-shadow: 0 24px 80px hsl(24 30% 18% / 0.10);
+  --radius: 14px;
+
+  --font-sans: "Pretendard Variable", "Pretendard", "Apple SD Gothic Neo", system-ui, sans-serif;
+  --font-display: "Fraunces", "Iropke Batang", "Noto Serif KR", serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+[data-theme="blue"] {
+  --background: 215 30% 96%;
+  --foreground: 222 30% 14%;
+  --card: 210 40% 99%;
+  --card-foreground: 222 30% 14%;
+  --popover: 210 40% 99%;
+  --popover-foreground: 222 30% 14%;
+  --primary: 222 50% 30%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 215 30% 92%;
+  --secondary-foreground: 222 40% 18%;
+  --muted: 215 25% 92%;
+  --muted-foreground: 222 12% 40%;
+  --accent: 215 35% 90%;
+  --accent-foreground: 222 40% 18%;
+  --destructive: 0 70% 45%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 215 25% 86%;
+  --input: 215 25% 86%;
+  --ring: 222 50% 30%;
+
+  --paper: 210 60% 99%;
+  --paper-strong: 215 45% 96%;
+  --ink: 222 35% 14%;
+  --rule: 215 25% 80%;
+  --brand: 222 50% 30%;
+  --brand-2: 215 40% 55%;
+  --paper-shadow: 0 24px 80px hsl(222 35% 18% / 0.10);
+  --radius: 14px;
+
+  --font-sans: "Pretendard Variable", "Pretendard", "Apple SD Gothic Neo", system-ui, sans-serif;
+  --font-display: "Schibsted Grotesk", "Pretendard Variable", "Pretendard", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+[data-theme="noir"] {
+  --background: 24 12% 8%;
+  --foreground: 30 25% 92%;
+  --card: 24 12% 12%;
+  --card-foreground: 30 25% 92%;
+  --popover: 24 12% 12%;
+  --popover-foreground: 30 25% 92%;
+  --primary: 36 65% 80%;
+  --primary-foreground: 24 30% 10%;
+  --secondary: 24 10% 18%;
+  --secondary-foreground: 30 25% 92%;
+  --muted: 24 8% 16%;
+  --muted-foreground: 24 12% 65%;
+  --accent: 24 10% 18%;
+  --accent-foreground: 30 25% 92%;
+  --destructive: 0 70% 55%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 24 10% 22%;
+  --input: 24 10% 22%;
+  --ring: 36 65% 80%;
+
+  --paper: 30 18% 11%;
+  --paper-strong: 30 14% 14%;
+  --ink: 30 30% 92%;
+  --rule: 24 10% 26%;
+  --brand: 36 70% 78%;
+  --brand-2: 22 50% 65%;
+  --paper-shadow: 0 30px 80px hsl(24 30% 4% / 0.55);
+  --radius: 14px;
+
+  --font-sans: "Pretendard Variable", "Pretendard", "Apple SD Gothic Neo", system-ui, sans-serif;
+  --font-display: "Fraunces", "Noto Serif KR", serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+[data-theme="aurora"] {
+  --background: 25 60% 97%;
+  --foreground: 340 30% 18%;
+  --card: 25 70% 99%;
+  --card-foreground: 340 30% 18%;
+  --popover: 25 70% 99%;
+  --popover-foreground: 340 30% 18%;
+  --primary: 345 50% 40%;
+  --primary-foreground: 25 60% 98%;
+  --secondary: 25 50% 92%;
+  --secondary-foreground: 340 30% 22%;
+  --muted: 25 40% 94%;
+  --muted-foreground: 340 12% 42%;
+  --accent: 145 30% 85%;
+  --accent-foreground: 340 30% 22%;
+  --destructive: 0 70% 45%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 25 30% 86%;
+  --input: 25 30% 86%;
+  --ring: 345 50% 40%;
+
+  --paper: 25 70% 99%;
+  --paper-strong: 18 70% 96%;
+  --ink: 340 30% 18%;
+  --rule: 25 30% 82%;
+  --brand: 345 55% 42%;
+  --brand-2: 18 55% 65%;
+  --paper-shadow: 0 30px 80px hsl(345 40% 25% / 0.10);
+  --radius: 16px;
+
+  --font-sans: "Pretendard Variable", "Pretendard", "Apple SD Gothic Neo", system-ui, sans-serif;
+  --font-display: "Fraunces", "Noto Serif KR", serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+[data-theme="brutal"] {
+  --background: 0 0% 96%;
+  --foreground: 0 0% 8%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 8%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 8%;
+  --primary: 0 0% 8%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 92%;
+  --secondary-foreground: 0 0% 8%;
+  --muted: 0 0% 94%;
+  --muted-foreground: 0 0% 35%;
+  --accent: 12 90% 55%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 80% 45%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 0 0% 12%;
+  --input: 0 0% 88%;
+  --ring: 12 90% 55%;
+
+  --paper: 0 0% 100%;
+  --paper-strong: 0 0% 96%;
+  --ink: 0 0% 6%;
+  --rule: 0 0% 10%;
+  --brand: 0 0% 6%;
+  --brand-2: 12 90% 55%;
+  --paper-shadow: 0 18px 60px hsl(0 0% 0% / 0.18);
+  --radius: 2px;
+
+  --font-sans: "Schibsted Grotesk", "Pretendard Variable", system-ui, sans-serif;
+  --font-display: "Schibsted Grotesk", "Pretendard Variable", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: hsl(var(--foreground));
+  background: hsl(var(--background));
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "ss01", "cv11";
+}
+
+/* ============================================================
+ * QUOTE DOCUMENT — paginated A4 preview, WYSIWYG with print
+ *
+ *  .quote-document   wrapper that holds N A4 pages stacked
+ *  .quote-page       a single A4 sheet (210mm × ≥297mm)
+ *
+ *  Both editor preview and print share the exact same paper
+ *  size (210mm) so any flex/grid inside the page renders the
+ *  same in both contexts. Tailwind viewport breakpoints (lg:,
+ *  md:) should NOT be used inside .quote-page — use fixed
+ *  layouts so editor and print look identical.
+ * ============================================================ */
+
+.quote-document {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  margin-inline: auto;
+  /* zoom is set inline based on canvas width — see Canvas.tsx */
+}
+
+.quote-page {
+  position: relative;
+  width: 210mm;
+  min-height: 297mm;
+  padding: 14mm 16mm;
+  background: hsl(var(--paper));
+  color: hsl(var(--ink));
+  box-shadow:
+    0 1px 2px hsl(0 0% 0% / 0.06),
+    0 12px 28px hsl(0 0% 0% / 0.14);
+  border-radius: 2px;
+  break-after: page;
+  page-break-after: always;
+  overflow: hidden;
+}
+
+.quote-page:last-child {
+  break-after: auto;
+  page-break-after: auto;
+}
+
+.quote-page h1,
+.quote-page h2,
+.quote-page h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.quote-page .eyebrow {
+  color: hsl(var(--brand));
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.quote-page-number {
+  position: absolute;
+  bottom: 8mm;
+  right: 12mm;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: hsl(var(--ink) / 0.4);
+  font-feature-settings: "tnum";
+}
+
+.pricing-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+.pricing-table th,
+.pricing-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid hsl(var(--rule));
+  text-align: left;
+  vertical-align: top;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.pricing-table thead th {
+  background: hsl(var(--paper-strong));
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+.pricing-table td.money,
+.pricing-table th.money {
+  text-align: right;
+  white-space: nowrap;
+}
+.pricing-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+.pricing-table tbody tr:nth-child(even) td {
+  background: hsl(var(--paper-strong) / 0.4);
+}
+
+[data-theme="brutal"] .pricing-table th,
+[data-theme="brutal"] .pricing-table td {
+  border-color: hsl(var(--rule));
+}
+[data-theme="brutal"] .pricing-table thead th {
+  background: hsl(var(--ink));
+  color: hsl(var(--paper));
+}
+
+/* PDF-viewer-like canvas backdrop */
+.editor-canvas-bg {
+  background:
+    radial-gradient(ellipse at top, hsl(var(--accent) / 0.35) 0%, transparent 55%),
+    hsl(215 15% 90%);
+}
+
+.section-total-pill {
+  background: hsl(var(--brand) / 0.08);
+  border: 1px solid hsl(var(--brand) / 0.18);
+}
+[data-theme="noir"] .section-total-pill {
+  background: hsl(var(--brand) / 0.12);
+}
+
+/* utility: thin scrollbar inside sidebars */
+.scrollthin::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scrollthin::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 4px;
+}
+.scrollthin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ============================================================
+ * PRINT — every .quote-page becomes one physical A4 sheet
+ *
+ * The editor preview already paginates content into 210×297mm
+ * `.quote-page` boxes. For print we simply:
+ *   1. Strip the editor chrome (.no-print)
+ *   2. Reset the editor's flex/scroll layout so pages flow
+ *   3. Set @page size:A4 margin:0 so each .quote-page maps 1:1
+ *      to a printed sheet (paper's own padding gives the margin)
+ *   4. Force background-colour printing
+ * ============================================================ */
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  html,
+  body,
+  #root {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    background: #fff !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  /* Unwind every nested flex/scroll container in the editor. */
+  .editor-shell,
+  .editor-shell > div,
+  .editor-canvas {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    flex: none !important;
+  }
+
+  /* Disable preview scale so each page prints at its true size. */
+  .quote-scale {
+    zoom: 1 !important;
+  }
+  .quote-document {
+    gap: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Keep all paper colors, gradients, zebra striping in print. */
+  .quote-page,
+  .quote-page * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  .quote-page {
+    width: 210mm !important;
+    min-height: 297mm !important;
+    margin: 0 !important;
+    padding: 14mm 16mm !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    page-break-after: always;
+    break-after: page;
+  }
+  .quote-page:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+
+  /* Page-internal overflow wrappers should not clip in print. */
+  .quote-page .overflow-x-auto,
+  .quote-page .overflow-hidden {
+    overflow: visible !important;
+  }
+
+  /* Avoid breaking individual rows/section cards inside a page. */
+  .quote-page > header,
+  .quote-page section,
+  .pricing-table tr {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}

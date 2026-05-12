@@ -1,0 +1,152 @@
+[
+  {
+    "name": "오피스클래식",
+    "price": 29000,
+    "brand": "넥스트커피랩",
+    "imageUrl": null
+  },
+  {
+    "name": "브라운스타",
+    "price": 30000,
+    "brand": "COFFEE24",
+    "imageUrl": null
+  },
+  {
+    "name": "골드모먼트",
+    "price": 31000,
+    "brand": "COFFEE24",
+    "imageUrl": null
+  },
+  {
+    "name": "동해 블렌드",
+    "price": 35000,
+    "brand": "보사노바",
+    "imageUrl": null
+  },
+  {
+    "name": "너티브라운 블렌드",
+    "price": 35000,
+    "brand": "넥스트커피랩",
+    "imageUrl": null
+  },
+  {
+    "name": "아마조네스 블렌드",
+    "price": 36000,
+    "brand": "넥스트커피랩",
+    "imageUrl": null
+  },
+  {
+    "name": "위펀 블렌드",
+    "price": 37000,
+    "brand": "보사노바",
+    "imageUrl": null
+  },
+  {
+    "name": "시그니처 블렌드",
+    "price": 39000,
+    "brand": "할리스",
+    "imageUrl": null
+  },
+  {
+    "name": "꼬모 블렌드",
+    "price": 39000,
+    "brand": "뮤제오",
+    "imageUrl": null
+  },
+  {
+    "name": "삼척 블렌드",
+    "price": 40000,
+    "brand": "보사노바",
+    "imageUrl": null
+  },
+  {
+    "name": "에티오피아 블렌드",
+    "price": 40000,
+    "brand": "넥스트커피랩",
+    "imageUrl": null
+  },
+  {
+    "name": "디카페인 블랜드",
+    "price": 42000,
+    "brand": "웨이브온",
+    "imageUrl": null
+  },
+  {
+    "name": "킹스맨 블렌드",
+    "price": 45000,
+    "brand": "넥스트커피랩",
+    "imageUrl": null
+  },
+  {
+    "name": "브라질 블렌드",
+    "price": 45000,
+    "brand": "넥스트커피랩",
+    "imageUrl": null
+  },
+  {
+    "name": "과테말라 블렌드",
+    "price": 47000,
+    "brand": "넥스트커피랩",
+    "imageUrl": null
+  },
+  {
+    "name": "엠버 블렌드",
+    "price": 48000,
+    "brand": "더반베를린",
+    "imageUrl": null
+  },
+  {
+    "name": "버티고",
+    "price": 49000,
+    "brand": "카페리브레",
+    "imageUrl": null
+  },
+  {
+    "name": "부산",
+    "price": 49000,
+    "brand": "모모스커피",
+    "imageUrl": null
+  },
+  {
+    "name": "클리프 50",
+    "price": 50000,
+    "brand": "코페아커피",
+    "imageUrl": null
+  },
+  {
+    "name": "클래식에스프레소",
+    "price": 50000,
+    "brand": "테라로사",
+    "imageUrl": null
+  },
+  {
+    "name": "에티오피아 짐마 디카페인",
+    "price": 52000,
+    "brand": "보사노바",
+    "imageUrl": null
+  },
+  {
+    "name": "노서프라이즈",
+    "price": 54000,
+    "brand": "커피리브레",
+    "imageUrl": null
+  },
+  {
+    "name": "다크리브레",
+    "price": 54000,
+    "brand": "커피리브레",
+    "imageUrl": null
+  },
+  {
+    "name": "프루티봉봉",
+    "price": 55000,
+    "brand": "모모스커피",
+    "imageUrl": null
+  },
+  {
+    "name": "에스쇼콜라",
+    "price": 55000,
+    "brand": "모모스커피",
+    "imageUrl": null
+  }
+]

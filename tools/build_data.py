@@ -8,7 +8,7 @@ from openpyxl import load_workbook
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "커피24 견적서 AX TF.xlsx"
-OUTPUT = ROOT / "app" / "data.js"
+OUTPUT_DIR = ROOT / "public" / "api"
 
 PURCHASE_OVERRIDES = {
     "카페스타 720": {
@@ -54,7 +54,7 @@ PURCHASE_OVERRIDES = {
 }
 
 
-def clean_text(value: str | None) -> str | None:
+def clean_text(value):
     if value is None:
         return None
     return str(value).strip().strip('"')
@@ -67,70 +67,73 @@ def iter_rows(sheet, width: int):
             yield values
 
 
+def write_json(name: str, payload):
+    path = OUTPUT_DIR / name
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return path
+
+
 def main() -> None:
-    workbook = load_workbook(SOURCE, data_only=True)
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    wb = load_workbook(SOURCE, data_only=True)
 
     machines = []
-    for name, description, spec, product_name, item_name in iter_rows(workbook["머신정보"], 5):
+    for name, description, spec, product_name, item_name in iter_rows(wb["머신정보"], 5):
         overrides = PURCHASE_OVERRIDES.get(name, {})
-        machines.append(
-            {
-                "name": name,
-                "description": clean_text(description),
-                "spec": clean_text(spec),
-                "productName": clean_text(product_name) or name,
-                "rentalItemName": clean_text(item_name) or "머신 단독 렌탈(4개월 1회 케어)",
-                "purchasePrice": overrides.get("purchasePrice"),
-                "purchaseLabel": overrides.get("purchaseLabel") or clean_text(product_name) or name,
-            }
-        )
+        machines.append({
+            "name": name,
+            "description": clean_text(description),
+            "spec": clean_text(spec),
+            "productName": clean_text(product_name) or name,
+            "rentalItemName": clean_text(item_name) or "머신 단독 렌탈(4개월 1회 케어)",
+            "purchasePrice": overrides.get("purchasePrice"),
+            "purchaseLabel": overrides.get("purchaseLabel") or clean_text(product_name) or name,
+            # Reserved for future product photo upload (see Machine.imageUrl in src/types/domain.ts)
+            "imageUrl": None,
+        })
+    write_json("machines.json", machines)
 
     machine_prices = []
-    for machine, term, included, price in iter_rows(workbook["머신단가"], 4):
-        machine_prices.append(
-            {
-                "machine": machine,
-                "term": int(term),
-                "beansIncluded": included,
-                "price": int(price),
-            }
-        )
+    for machine, term, included, price in iter_rows(wb["머신단가"], 4):
+        machine_prices.append({
+            "machine": machine,
+            "term": int(term),
+            "beansIncluded": included,
+            "price": int(price),
+        })
+    write_json("machine-prices.json", machine_prices)
 
-    care_cycles = []
-    for cycle, extra in iter_rows(workbook["케어주기"], 2):
-        care_cycles.append({"cycle": cycle, "extra": int(extra)})
+    care_cycles = [
+        {"cycle": cycle, "extra": int(extra)}
+        for cycle, extra in iter_rows(wb["케어주기"], 2)
+    ]
+    write_json("care-cycles.json", care_cycles)
 
-    beans = []
-    for bean, price, brand in iter_rows(workbook["원두정보"], 3):
-        beans.append({"name": bean, "price": int(price), "brand": brand})
+    beans = [
+        {"name": name, "price": int(price), "brand": brand, "imageUrl": None}
+        for name, price, brand in iter_rows(wb["원두정보"], 3)
+    ]
+    write_json("beans.json", beans)
 
-    sales_reps = []
-    for name, phone, email in iter_rows(workbook["영업담당자"], 3):
-        sales_reps.append({"name": name, "phone": phone, "email": email})
+    reps = [
+        {"name": name, "phone": phone, "email": email}
+        for name, phone, email in iter_rows(wb["영업담당자"], 3)
+    ]
+    write_json("sales-reps.json", reps)
 
-    payload = {
-        "machines": machines,
-        "machinePrices": machine_prices,
-        "careCycles": care_cycles,
-        "beans": beans,
-        "salesReps": sales_reps,
-        "constants": {
-            "quoteValidDays": 15,
-            "vatRate": 0.1,
-            "shippingFeeVatIncluded": 3500,
-            "freeShippingThresholdVatIncluded": 50000,
-            "purchaseInstallFee": 70000,
-            "setupVisitFee": 60000,
-            "plumbInstallFee": 50000,
-            "plumbKitFee": 25000,
-            "ownershipTransferMonths": 36,
-        },
-    }
+    write_json("constants.json", {
+        "quoteValidDays": 15,
+        "vatRate": 0.1,
+        "shippingFeeVatIncluded": 3500,
+        "freeShippingThresholdVatIncluded": 50000,
+        "purchaseInstallFee": 70000,
+        "setupVisitFee": 60000,
+        "plumbInstallFee": 50000,
+        "plumbKitFee": 25000,
+        "ownershipTransferMonths": 36,
+    })
 
-    OUTPUT.write_text(
-        "window.COFFEE24_DATA = " + json.dumps(payload, ensure_ascii=False, indent=2) + ";\n",
-        encoding="utf-8",
-    )
+    print(f"wrote {len(machines)} machines · {len(machine_prices)} prices · {len(beans)} beans · {len(reps)} reps → public/api/")
 
 
 if __name__ == "__main__":
