@@ -56,7 +56,8 @@ export type Constants = {
   ownershipTransferMonths: number;
 };
 
-export type ThemeId = "warm" | "blue" | "noir" | "aurora" | "brutal";
+export type ThemeId = "warm" | "blue" | "aurora" | "brutal";
+export type Orientation = "portrait" | "landscape";
 
 export type BeanLineInput = {
   id: string;

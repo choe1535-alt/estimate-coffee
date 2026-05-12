@@ -1,24 +1,20 @@
-import { formatMoney } from "@/lib/utils";
-import { useCoffeeBundle } from "@/hooks/useCoffeeData";
-import { useQuoteStore } from "@/stores/quoteStore";
-import { computeQuote } from "@/lib/quote";
 import { Separator } from "@/components/ui/separator";
+import { formatMoney } from "@/lib/utils";
+import { useCoffeeBundle } from "@/services/coffee/hooks";
+import { useQuoteStore } from "@/services/coffee/store";
+import { computeQuote } from "@/services/coffee/lib/quote";
 
-export function RightSidebar() {
+export function SummaryPanel() {
   const state = useQuoteStore();
   const bundle = useCoffeeBundle();
-  if (!bundle.data) {
-    return (
-      <aside className="hidden w-[300px] shrink-0 flex-col gap-3 border-l border-border bg-background px-4 py-4 no-print xl:flex">
-        <Skeleton />
-      </aside>
-    );
-  }
+
+  if (!bundle.data) return <Skeleton />;
+
   const machine = bundle.data.machines.find((m) => m.name === state.machineName);
   const quote = computeQuote(state, bundle.data);
 
   return (
-    <aside className="hidden w-[300px] shrink-0 flex-col gap-4 overflow-y-auto border-l border-border bg-background px-4 py-4 no-print xl:flex scrollthin">
+    <div className="flex flex-col gap-4">
       <header>
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
           Summary
@@ -60,10 +56,7 @@ export function RightSidebar() {
               : "원두 미포함"
           }
         />
-        <Row
-          k="할인율"
-          v={`머신 ${state.machineDiscount}% / 원두 ${state.beanDiscount}%`}
-        />
+        <Row k="할인율" v={`머신 ${state.machineDiscount}% / 원두 ${state.beanDiscount}%`} />
       </div>
 
       {machine && (
@@ -81,12 +74,7 @@ export function RightSidebar() {
           </ul>
         </div>
       )}
-
-      <p className="text-[10px] leading-relaxed text-muted-foreground/80">
-        * 머신/원두/담당자 정보는 향후 사내 DB API로 교체됩니다.
-        지금은 정적 JSON을 TanStack Query + axios로 호출 중입니다.
-      </p>
-    </aside>
+    </div>
   );
 }
 
@@ -101,10 +89,10 @@ function Row({ k, v }: { k: string; v: string }) {
 
 function Skeleton() {
   return (
-    <>
+    <div className="space-y-3">
       <div className="h-4 w-24 animate-pulse rounded bg-muted" />
       <div className="h-24 animate-pulse rounded bg-muted" />
       <div className="h-32 animate-pulse rounded bg-muted" />
-    </>
+    </div>
   );
 }

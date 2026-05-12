@@ -1,5 +1,5 @@
 import { formatMoney } from "@/lib/utils";
-import type { QuoteLine } from "@/types/domain";
+import type { QuoteLine } from "@/services/coffee/types";
 
 export function PricingTable({
   lines,

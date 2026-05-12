@@ -6,10 +6,12 @@ import type {
   Machine,
   MachinePrice,
   SalesRep,
-} from "@/types/domain";
+} from "@/services/coffee/types";
+
+const RESOURCE_ROOT = "/coffee";
 
 async function get<T>(path: string): Promise<T> {
-  const { data } = await api.get<T>(path);
+  const { data } = await api.get<T>(`${RESOURCE_ROOT}${path}`);
   return data;
 }
 

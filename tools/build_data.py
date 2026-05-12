@@ -8,7 +8,9 @@ from openpyxl import load_workbook
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "커피24 견적서 AX TF.xlsx"
-OUTPUT_DIR = ROOT / "public" / "api"
+# Coffee service resources live under public/api/coffee/ so additional
+# services (정수기, 스낵 등) can drop alongside without collision.
+OUTPUT_DIR = ROOT / "public" / "api" / "coffee"
 
 PURCHASE_OVERRIDES = {
     "카페스타 720": {

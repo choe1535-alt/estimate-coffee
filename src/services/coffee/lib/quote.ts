@@ -7,8 +7,8 @@ import type {
   QuoteLine,
   SalesRep,
   CareCycle,
-} from "@/types/domain";
-import type { QuoteState } from "@/stores/quoteStore";
+} from "@/services/coffee/types";
+import type { QuoteState } from "@/services/coffee/store";
 
 export type CoffeeData = {
   machines: Machine[];

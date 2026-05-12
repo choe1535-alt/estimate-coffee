@@ -6,7 +6,7 @@ import {
   fetchMachinePrices,
   fetchMachines,
   fetchSalesReps,
-} from "@/api/resources";
+} from "@/services/coffee/api";
 
 const STALE = 1000 * 60 * 60; // 1h — mock API is static
 

@@ -1,6 +1,11 @@
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
 
+/**
+ * Generic inspector form primitives shared by all service panels.
+ * Lives in the shell so each service can use the same look&feel
+ * without duplicating wrappers.
+ */
 export function Field({
   label,
   hint,
@@ -38,9 +43,7 @@ export function FieldGroup({
     <section className="space-y-3">
       <header className="space-y-0.5">
         <h3 className="font-display text-sm font-semibold tracking-tight">{title}</h3>
-        {description ? (
-          <p className="text-xs text-muted-foreground">{description}</p>
-        ) : null}
+        {description ? <p className="text-xs text-muted-foreground">{description}</p> : null}
       </header>
       <div className="space-y-3">{children}</div>
     </section>

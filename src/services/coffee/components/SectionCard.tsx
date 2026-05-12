@@ -1,6 +1,6 @@
 import { formatMoney } from "@/lib/utils";
 import { PricingTable } from "./PricingTable";
-import type { QuoteLine } from "@/types/domain";
+import type { QuoteLine } from "@/services/coffee/types";
 
 export function SectionCard({
   title,
