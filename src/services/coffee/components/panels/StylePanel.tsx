@@ -1,6 +1,8 @@
 import { RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -27,10 +29,48 @@ export function StylePanel() {
   const orientation = useQuoteStore((s) => s.orientation);
   const pagePaddingX = useQuoteStore((s) => s.pagePaddingX);
   const pagePaddingY = useQuoteStore((s) => s.pagePaddingY);
+  const showPurchase = useQuoteStore((s) => s.showPurchase);
+  const showRental = useQuoteStore((s) => s.showRental);
+  const showBundle = useQuoteStore((s) => s.showBundle);
   const set = useQuoteStore((s) => s.set);
 
   return (
     <div className="space-y-6">
+      <FieldGroup title="표시 설정" description="견적서에 표시할 항목을 선택합니다.">
+        <div className="grid gap-4">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="showPurchase" className="cursor-pointer font-semibold">
+              머신 구매
+            </Label>
+            <Switch
+              id="showPurchase"
+              checked={showPurchase}
+              onCheckedChange={(v) => set("showPurchase", v)}
+            />
+          </div>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="showRental" className="cursor-pointer font-semibold">
+              머신 단독 렌탈
+            </Label>
+            <Switch
+              id="showRental"
+              checked={showRental}
+              onCheckedChange={(v) => set("showRental", v)}
+            />
+          </div>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="showBundle" className="cursor-pointer font-semibold">
+              머신렌탈&원두구독
+            </Label>
+            <Switch
+              id="showBundle"
+              checked={showBundle}
+              onCheckedChange={(v) => set("showBundle", v)}
+            />
+          </div>
+        </div>
+      </FieldGroup>
+
       <FieldGroup title="템플릿" description="견적서 미리보기에만 적용됩니다.">
         <div className="space-y-1.5">
           {THEMES.map((t) => {

@@ -31,6 +31,10 @@ export type QuoteState = {
   beanDiscount: number; // 0..100
   purchaseInstall: boolean;
 
+  showPurchase: boolean;
+  showRental: boolean;
+  showBundle: boolean;
+
   beansEnabled: boolean;
   shippingMode: ShippingMode;
   beanLines: BeanLineInput[];
@@ -86,6 +90,10 @@ const baseDefaults = {
   beanDiscount: 0,
   purchaseInstall: true,
 
+  showPurchase: true,
+  showRental: true,
+  showBundle: true,
+
   beansEnabled: true,
   shippingMode: "auto" as ShippingMode,
   beanLines: initialBeans,
@@ -137,9 +145,9 @@ export const useQuoteStore = create<QuoteState>()(
     }),
     {
       name: "coffee24-quote",
-      version: 5,
+      version: 6,
       migrate: (persisted: unknown, from) => {
-        if (!persisted || typeof persisted !== "object") return persisted as Partial<QuoteState>;
+        if (!persisted || typeof persisted !== "object") return { ...baseDefaults } as QuoteState;
         const obj = persisted as Record<string, unknown>;
         // v3 → drop activeSection (moved to shell appStore in v4)
         if (from < 4) delete obj.activeSection;
@@ -150,7 +158,12 @@ export const useQuoteStore = create<QuoteState>()(
           if (typeof obj.pagePaddingY !== "number") obj.pagePaddingY = 14;
           if (!Array.isArray(obj.commonNotes)) obj.commonNotes = [...DEFAULT_NOTES];
         }
-        return obj as Partial<QuoteState>;
+        if (from < 6) {
+          if (typeof obj.showPurchase !== "boolean") obj.showPurchase = true;
+          if (typeof obj.showRental !== "boolean") obj.showRental = true;
+          if (typeof obj.showBundle !== "boolean") obj.showBundle = true;
+        }
+        return { ...baseDefaults, ...obj } as QuoteState;
       },
       partialize: (state) => {
         const {

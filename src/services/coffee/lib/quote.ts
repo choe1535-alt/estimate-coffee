@@ -60,11 +60,8 @@ function line(input: {
 }
 
 /**
- * Mirrors template-Excel logic:
- *   원두포함여부 = beansEnabled ? "O" : "X"
- *   - 원두포함여부 = "X" → only "머신 단독 렌탈" section renders
- *   - 원두포함여부 = "O" → only "머신렌탈 & 원두구독" section renders
- * "머신 구매" is always rendered as a comparison option.
+ * Calculates all possible quote paths (Purchase, Rental-Only, Bundle)
+ * independently so the UI can toggle their visibility as comparison points.
  */
 export function computeQuote(state: QuoteState, data: CoffeeData): ComputedQuote {
   const { constants, machinePrices, beans, machines } = data;
@@ -77,7 +74,7 @@ export function computeQuote(state: QuoteState, data: CoffeeData): ComputedQuote
   const validUntil = new Date(`${state.quoteDate}T00:00:00`);
   validUntil.setDate(validUntil.getDate() + constants.quoteValidDays);
 
-  // ---- 머신 구매 (always) ----
+  // ---- 머신 구매 ----
   const purchaseLines: QuoteLine[] = [];
   if (machine.purchasePrice != null) {
     const discounted = Math.round(machine.purchasePrice * (1 - machineDiscount));
@@ -122,123 +119,114 @@ export function computeQuote(state: QuoteState, data: CoffeeData): ComputedQuote
     );
   }
 
-  // ---- 머신 단독 렌탈 — only when beans disabled ----
-  let rentalOnlyLines: QuoteLine[] = [];
-  if (!state.beansEnabled) {
-    const unit = priceFor(machinePrices, machine.name, state.contractTerm, "X");
-    const discounted = unit == null ? null : Math.round(unit * (1 - machineDiscount));
-    rentalOnlyLines = [
-      line({
-        type: "커피머신 단독",
-        productName: machine.productName,
-        itemName: machine.rentalItemName,
-        term: `${state.contractTerm}개월`,
-        quantity: state.machineQuantity,
-        unit: "EA",
-        listPrice: unit,
-        discountPrice: discounted,
-      }),
-    ];
-  }
-
-  // ---- 머신렌탈 & 원두구독 — only when beans enabled ----
-  let bundleLines: QuoteLine[] = [];
-  let shippingIncluded = false;
-  let beanSubtotalVatIncluded = 0;
-
-  if (state.beansEnabled) {
-    const bundleUnit = priceFor(machinePrices, machine.name, state.contractTerm, "O");
-    const rentalUnit = priceFor(machinePrices, machine.name, state.contractTerm, "X");
-    const discountedBundle = bundleUnit == null ? null : Math.round(bundleUnit * (1 - machineDiscount));
-
-    const machineLine = line({
-      type: "커피머신 정기구독",
+  // ---- 머신 단독 렌탈 (Beans = "X") ----
+  const rentalUnit = priceFor(machinePrices, machine.name, state.contractTerm, "X");
+  const discountedRental = rentalUnit == null ? null : Math.round(rentalUnit * (1 - machineDiscount));
+  const rentalOnlyLines = [
+    line({
+      type: "커피머신 단독",
       productName: machine.productName,
-      itemName: `${state.careCycle} 정기케어`,
+      itemName: machine.rentalItemName,
       term: `${state.contractTerm}개월`,
       quantity: state.machineQuantity,
       unit: "EA",
-      listPrice: rentalUnit ?? bundleUnit,
-      discountPrice: discountedBundle,
-    });
+      listPrice: rentalUnit,
+      discountPrice: discountedRental,
+    }),
+  ];
 
-    const beanLineItems: QuoteLine[] = state.beanLines
-      .filter((b) => b.quantity > 0)
-      .map((entry) => {
-        const bean = beanMap.get(entry.beanName);
-        if (!bean) {
-          return line({
-            type: "원두 정기구독",
-            productName: "Best 원두",
-            itemName: entry.beanName,
-            term: `${state.contractTerm}개월`,
-            quantity: entry.quantity,
-            unit: "KG",
-            listPrice: null,
-            discountPrice: null,
-          });
-        }
-        const discounted = Math.round(bean.price * (1 - beanDiscount));
+  // ---- 머신렌탈 & 원두구독 (Beans = "O") ----
+  const bundleUnit = priceFor(machinePrices, machine.name, state.contractTerm, "O");
+  const discountedBundle = bundleUnit == null ? null : Math.round(bundleUnit * (1 - machineDiscount));
+
+  const machineBundleLine = line({
+    type: "커피머신 정기구독",
+    productName: machine.productName,
+    itemName: `${state.careCycle} 정기케어`,
+    term: `${state.contractTerm}개월`,
+    quantity: state.machineQuantity,
+    unit: "EA",
+    listPrice: rentalUnit ?? bundleUnit, // Use rental price as list price if available
+    discountPrice: discountedBundle,
+  });
+
+  const beanLineItems: QuoteLine[] = state.beanLines
+    .filter((b) => b.quantity > 0)
+    .map((entry) => {
+      const bean = beanMap.get(entry.beanName);
+      if (!bean) {
         return line({
           type: "원두 정기구독",
-          productName: `${bean.brand} 원두`,
-          itemName: bean.name,
+          productName: "Best 원두",
+          itemName: entry.beanName,
           term: `${state.contractTerm}개월`,
           quantity: entry.quantity,
           unit: "KG",
-          listPrice: bean.price,
-          discountPrice: discounted,
+          listPrice: null,
+          discountPrice: null,
         });
+      }
+      const discounted = Math.round(bean.price * (1 - beanDiscount));
+      return line({
+        type: "원두 정기구독",
+        productName: `${bean.brand} 원두`,
+        itemName: bean.name,
+        term: `${state.contractTerm}개월`,
+        quantity: entry.quantity,
+        unit: "KG",
+        listPrice: bean.price,
+        discountPrice: discounted,
       });
+    });
 
-    const beanSubtotalVatExcluded = beanLineItems.reduce(
-      (sum, b) => sum + (b.amount ?? 0),
-      0,
-    );
-    beanSubtotalVatIncluded = beanSubtotalVatExcluded * (1 + vatRate);
+  const beanSubtotalVatExcluded = beanLineItems.reduce(
+    (sum, b) => sum + (b.amount ?? 0),
+    0,
+  );
+  const beanSubtotalVatIncluded = beanSubtotalVatExcluded * (1 + vatRate);
 
-    const careExtra = data.careCycles.find((c) => c.cycle === state.careCycle)?.extra ?? 0;
-    const careLine = careExtra > 0
-      ? line({
-          type: "케어서비스",
-          productName: "머신 케어",
-          itemName: `${state.careCycle} 머신 케어 추가`,
-          term: `${state.contractTerm}개월`,
-          quantity: state.machineQuantity,
-          unit: "회",
-          listPrice: careExtra,
-          discountPrice: careExtra,
-        })
-      : null;
+  const careExtra = data.careCycles.find((c) => c.cycle === state.careCycle)?.extra ?? 0;
+  const careLine = careExtra > 0
+    ? line({
+        type: "케어서비스",
+        productName: "머신 케어",
+        itemName: `${state.careCycle} 머신 케어 추가`,
+        term: `${state.contractTerm}개월`,
+        quantity: state.machineQuantity,
+        unit: "회",
+        listPrice: careExtra,
+        discountPrice: careExtra,
+      })
+    : null;
 
-    if (state.shippingMode === "yes") {
-      shippingIncluded = true;
-    } else if (state.shippingMode === "auto") {
-      shippingIncluded =
-        beanLineItems.length > 0 &&
-        beanSubtotalVatIncluded < constants.freeShippingThresholdVatIncluded;
-    }
-
-    const shippingLine = shippingIncluded
-      ? line({
-          type: "배송비",
-          productName: "택배비",
-          itemName: "택배비",
-          term: `${state.contractTerm}개월`,
-          quantity: 1,
-          unit: "EA",
-          listPrice: 0,
-          discountPrice: constants.shippingFeeVatIncluded / (1 + vatRate),
-        })
-      : null;
-
-    bundleLines = [
-      machineLine,
-      ...beanLineItems,
-      ...(careLine ? [careLine] : []),
-      ...(shippingLine ? [shippingLine] : []),
-    ];
+  let shippingIncluded = false;
+  if (state.shippingMode === "yes") {
+    shippingIncluded = true;
+  } else if (state.shippingMode === "auto") {
+    shippingIncluded =
+      beanLineItems.length > 0 &&
+      beanSubtotalVatIncluded < constants.freeShippingThresholdVatIncluded;
   }
+
+  const shippingLine = shippingIncluded
+    ? line({
+        type: "배송비",
+        productName: "택배비",
+        itemName: "택배비",
+        term: `${state.contractTerm}개월`,
+        quantity: 1,
+        unit: "EA",
+        listPrice: 0,
+        discountPrice: constants.shippingFeeVatIncluded / (1 + vatRate),
+      })
+    : null;
+
+  const bundleLines = [
+    machineBundleLine,
+    ...beanLineItems,
+    ...(careLine ? [careLine] : []),
+    ...(shippingLine ? [shippingLine] : []),
+  ];
 
   const sum = (lines: QuoteLine[]) => lines.reduce((acc, l) => acc + (l.amount ?? 0), 0);
   const allNumeric = (lines: QuoteLine[]) =>

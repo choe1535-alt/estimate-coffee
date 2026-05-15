@@ -39,6 +39,28 @@ src/pages/         — EditorPage
 src/styles/        — Tailwind base + theme tokens
 ```
 
+## 데이터 관리
+
+담당자, 머신, 머신단가, 케어주기, 원두정보는 코드에 저장하지 않고 Google Sheets에서 불러옵니다.
+
+- 기본 스프레드시트: `커피24 견적서 AX TF`
+- 기본 ID: `1VOOcyurvIl9TD47KnJWls6NpPz3dlw8g6s4gFAzfy2c`
+- 환경변수로 다른 시트를 연결하려면 `.env`에 아래처럼 입력합니다.
+
+```bash
+VITE_COFFEE_SHEET_ID=스프레드시트_ID
+```
+
+현재 웹앱이 읽는 탭은 다음과 같습니다.
+
+- `머신정보`
+- `머신단가`
+- `케어주기`
+- `원두정보`
+- `영업담당자`
+
+브라우저에서 직접 읽는 방식이라, 현재 단계에서는 스프레드시트가 "링크가 있는 사용자 보기 가능" 또는 "웹에 게시" 상태여야 합니다.
+
 ## 실행
 
 ```bash

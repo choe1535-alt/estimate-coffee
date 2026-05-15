@@ -72,6 +72,19 @@ export function QuoteDocument() {
     data.salesReps.find((r) => r.name === state.salesRepName) ?? data.salesReps[0];
   const quoteDate = new Date(`${state.quoteDate}T00:00:00`);
 
+  let recommendedTitle = state.beansEnabled ? "머신렌탈 & 원두구독" : "머신 단독 렌탈";
+  let recommendedTotal = state.beansEnabled
+    ? quote.totals.bundleVatIncluded
+    : quote.totals.rentalOnlyVatIncluded;
+
+  if (!state.showBundle && state.showRental) {
+    recommendedTitle = "머신 단독 렌탈";
+    recommendedTotal = quote.totals.rentalOnlyVatIncluded;
+  } else if (!state.showBundle && !state.showRental && state.showPurchase) {
+    recommendedTitle = "머신 구매";
+    recommendedTotal = quote.totals.purchaseVatIncluded;
+  }
+
   const renderedNotes = [
     ...state.commonNotes.filter((n) => n.trim().length > 0),
     `케어주기 선택: ${state.careCycle}`,
@@ -84,7 +97,7 @@ export function QuoteDocument() {
 
   // Build the flat section list. Each section is one atomic block
   // that the paginator will keep together on a single page.
-  const sections: SectionDef[] = [
+  const sections: (SectionDef | boolean | null | undefined)[] = [
     {
       id: "header",
       node: (
@@ -171,7 +184,7 @@ export function QuoteDocument() {
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-[0.2em] opacity-80">추천안</p>
             <p className="font-display text-[18px] font-semibold leading-tight">
-              {state.beansEnabled ? "머신렌탈 & 원두구독" : "머신 단독 렌탈"}
+              {recommendedTitle}
             </p>
           </div>
           <div className="text-right">
@@ -179,17 +192,13 @@ export function QuoteDocument() {
               VAT 포함 월 납부금액
             </p>
             <p className="font-display text-[22px] font-semibold leading-tight">
-              {formatMoney(
-                state.beansEnabled
-                  ? quote.totals.bundleVatIncluded
-                  : quote.totals.rentalOnlyVatIncluded,
-              )}
+              {formatMoney(recommendedTotal)}
             </p>
           </div>
         </div>
       ),
     },
-    {
+    state.showPurchase && {
       id: "purchase",
       node: (
         <SectionCard
@@ -202,9 +211,9 @@ export function QuoteDocument() {
         />
       ),
     },
-    {
-      id: "main",
-      node: !state.beansEnabled ? (
+    state.showRental && {
+      id: "rental",
+      node: (
         <SectionCard
           title="Option · Rental"
           subtitle="머신 단독 렌탈"
@@ -213,7 +222,11 @@ export function QuoteDocument() {
           emptyMessage="해당 약정 조건의 단독 렌탈 단가가 없습니다."
           withDiscountColumn={false}
         />
-      ) : (
+      ),
+    },
+    state.showBundle && {
+      id: "bundle",
+      node: (
         <SectionCard
           title="Option · Subscription"
           subtitle="머신렌탈 & 원두구독"
@@ -333,7 +346,12 @@ export function QuoteDocument() {
     },
   ];
 
-  return <PaginatedDocument sections={sections} theme={state.theme} />;
+  return (
+    <PaginatedDocument
+      sections={sections.filter((section): section is SectionDef => Boolean(section))}
+      theme={state.theme}
+    />
+  );
 }
 
 /**
